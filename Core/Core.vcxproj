@@ -169,6 +169,7 @@
     <ClCompile Include="Primitives.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scenes.cpp" />
+    <ClCompile Include="Script.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -184,6 +185,7 @@
     <ClInclude Include="Primitives.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scenes.h" />
+    <ClInclude Include="Script.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

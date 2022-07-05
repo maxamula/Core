@@ -1,5 +1,6 @@
 #pragma once
 #include "Core.h"
+#include "Camera.h"
 #include <string>
 #include "entt/entt.hpp"
 
@@ -24,13 +25,18 @@ public:
 	~Scene() = default;
 
 	GameObject CreateEntity(std::wstring tag);
+	Camera& GetCamera();
+	void Start();
 	void Update(float fDeltaTime);
 private:
 	// Systems
-	void DrawObject();
+	void DrawScene();
+	void ScriptStart();
+	void ScriptUpdate(float fElapsedTime);
 
 	entt::registry registry;
 	Core* m_core;
+	Camera m_activeCamera;
 };
 
 class GameObject

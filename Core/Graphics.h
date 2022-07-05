@@ -47,7 +47,6 @@ private:
 	void EndFrame();
 private:
 	Core* m_core = NULL;
-	Camera m_cam;
 
 	std::unique_ptr<Window> wnd;
 	Resolution m_resolution = { 1280, 720 };

@@ -6,7 +6,7 @@
 
 namespace wrl = Microsoft::WRL;
 
-void Scene::DrawObject()
+void Scene::DrawScene()
 {
 	for (auto [object, pos, mesh, renderer] : registry.view<PositionComponent, Mesh, MeshRenderer>().each())	// for each object on the scene
 	{
@@ -47,7 +47,7 @@ void Scene::DrawObject()
 		const TransCBuf cb =
 		{
 			{
-				m_core->gfx().m_cam.GetMatrix({pos.x + renderer.offset.x, pos.y + renderer.offset.y, pos.z + renderer.offset.z }, renderer.scaling, renderer.rotation, 9.0f/16.0f)
+				m_activeCamera.GetMatrix({pos.x + renderer.offset.x, pos.y + renderer.offset.y, pos.z + renderer.offset.z }, renderer.scaling, renderer.rotation, 9.0f/16.0f)
 			}
 		};
 		m_core->gfx().UpdateMatrix(cb);

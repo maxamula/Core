@@ -12,9 +12,20 @@ GameObject Scene::CreateEntity(std::wstring tag)
 	return object;
 }
 
+Camera& Scene::GetCamera()
+{
+	return m_activeCamera;
+}
+
+void Scene::Start()
+{
+	ScriptStart();
+}
+
 void Scene::Update(float fDeltaTime)
 {
-	DrawObject();
+	DrawScene();
+	ScriptUpdate(fDeltaTime);
 }
 
 GameObject::GameObject()

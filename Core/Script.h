@@ -5,17 +5,13 @@ class Script;
 
 struct ScriptComponent
 {
-	Script* script;
+	Script* pScript;
 };
 
 class Script
 {
 public:
-	Script(GameObject* pObj) : This(pObj)
-	{}
-	virtual void Start() = 0;
-	virtual void Update(float fDeltaTime) = 0;
-protected:
-	GameObject* This = 0;
+	virtual void Start(GameObject object) = 0;
+	virtual void Update(float fElapsedTime, GameObject object) = 0;
 };
 

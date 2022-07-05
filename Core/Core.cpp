@@ -57,7 +57,12 @@ void Core::WindowThreadProxy(Core* This)
 
 void Core::MainThread()
 {
-	
+	// Initialize all scenes
+	for (auto [tag, scene] : m_scenes->m_sceneList)
+	{
+		scene->Start();
+	}
+	// Main loop
 	while (graphics->wnd->GetWindowState())
 	{
 		graphics->BeginFrame();
