@@ -57,5 +57,6 @@ void CubeScript::Update(float fElapsedTime, GameObject object)
 }
 ```
 Result:
+
 ![2022-07-06 02-16-31](https://user-images.githubusercontent.com/78308778/177432805-6811b5dc-b9fa-4020-9877-ed46a1aa2c73.gif)
 
