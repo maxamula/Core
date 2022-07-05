@@ -21,11 +21,11 @@ void Scene::DrawObject()
 		bd.StructureByteStride = sizeof(Vertex);
 		D3D11_SUBRESOURCE_DATA sd = {};
 		sd.pSysMem = mesh.pVertexData;
-		m_pGfx->pDev->CreateBuffer(&bd, &sd, &pVertexBuffer);
+		m_core->gfx().pDev->CreateBuffer(&bd, &sd, &pVertexBuffer);
 		// Bind Vertex Buffer
 		const UINT stride = sizeof(Vertex);
 		const UINT offset = 0u;
-		m_pGfx->pContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
+		m_core->gfx().pContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
 
 		// Index Buffer
 		wrl::ComPtr<ID3D11Buffer> pIndexBuffer;
@@ -38,19 +38,19 @@ void Scene::DrawObject()
 		ibd.StructureByteStride = sizeof(unsigned int);
 		D3D11_SUBRESOURCE_DATA isd = {};
 		isd.pSysMem = mesh.pIndexData;
-		m_pGfx->pDev->CreateBuffer(&ibd, &isd, &pIndexBuffer);
+		m_core->gfx().pDev->CreateBuffer(&ibd, &isd, &pIndexBuffer);
 		// Bind Index Buffer
-		m_pGfx->pContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0u);
+		m_core->gfx().pContext->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0u);
 
 
 		// Update transformation matrix
 		const TransCBuf cb =
 		{
 			{
-				m_pGfx->m_cam.GetMatrix({pos.x + renderer.offset.x, pos.y + renderer.offset.y, pos.z + renderer.offset.z }, renderer.scaling, renderer.rotation, 9.0f/16.0f)
+				m_core->gfx().m_cam.GetMatrix({pos.x + renderer.offset.x, pos.y + renderer.offset.y, pos.z + renderer.offset.z }, renderer.scaling, renderer.rotation, 9.0f/16.0f)
 			}
 		};
-		m_pGfx->UpdateMatrix(cb);
+		m_core->gfx().UpdateMatrix(cb);
 
 		// cube colors
 		struct ConstantBuffer2
@@ -84,24 +84,23 @@ void Scene::DrawObject()
 		cbd2.StructureByteStride = 0u;
 		D3D11_SUBRESOURCE_DATA csd2 = {};
 		csd2.pSysMem = &cb2;
-		m_pGfx->pDev->CreateBuffer(&cbd2, &csd2, &pConstantBuffer2);
+		m_core->gfx().pDev->CreateBuffer(&cbd2, &csd2, &pConstantBuffer2);
 		// bind pixel constant buffer
-		m_pGfx->pContext->PSSetConstantBuffers(0u, 1u, pConstantBuffer2.GetAddressOf());
+		m_core->gfx().pContext->PSSetConstantBuffers(0u, 1u, pConstantBuffer2.GetAddressOf());
 
 		// Pixel Shader
 		wrl::ComPtr<ID3D11PixelShader> pPixelShader;
-		wrl::ComPtr<ID3DBlob> pBlob;
-		D3DReadFileToBlob(L"C:\\PixelShader.cso", &pBlob);
-		m_pGfx->pDev->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
+		ID3DBlob* pBlob = m_core->resources().GetShader(L"C:\\PixelShader.cso");
+		m_core->gfx().pDev->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
 		// Bind Pixel Shader
-		m_pGfx->pContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
+		m_core->gfx().pContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
 
 		// Vertex Shader
 		wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-		D3DReadFileToBlob(L"C:\\VertexShader.cso", &pBlob);
-		m_pGfx->pDev->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
+		pBlob = m_core->resources().GetShader(L"C:\\VertexShader.cso");
+		m_core->gfx().pDev->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
 		// Bind Vertex Shader
-		m_pGfx->pContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+		m_core->gfx().pContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
 
 
 		// Input Layout
@@ -110,13 +109,13 @@ void Scene::DrawObject()
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA, 0},
 		};
-		m_pGfx->pDev->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
-		m_pGfx->pContext->IASetInputLayout(pInputLayout.Get());
+		m_core->gfx().pDev->CreateInputLayout(ied, (UINT)std::size(ied), pBlob->GetBufferPointer(), pBlob->GetBufferSize(), &pInputLayout);
+		m_core->gfx().pContext->IASetInputLayout(pInputLayout.Get());
 
 
 		// Primitive Topology
-		m_pGfx->pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST); 
+		m_core->gfx().pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		m_pGfx->pContext->DrawIndexed((UINT)36u, 0u, 0u);
+		m_core->gfx().pContext->DrawIndexed((UINT)36u, 0u, 0u);
 	}
 }

@@ -3,6 +3,7 @@
 #include "Scenes.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "ResourceManager.h"
 #include <memory>
 
 class Graphics;
@@ -25,6 +26,7 @@ public:
 	Scenes& scenes();
 	Window& window();
 	Input input();
+	ResourceManager& resources();
 	
 	
 protected:
@@ -34,6 +36,8 @@ protected:
 	// Input
 	Keyboard keyboard;
 	Mouse mouse;
+	// Resource manager
+	ResourceManager m_resourceManager;
 private:
 	static void MainThreadProxy(Core* This);
 	static void WindowThreadProxy(Core* This);

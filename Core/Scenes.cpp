@@ -1,11 +1,11 @@
 #include "Scenes.h"
 
-Scenes::Scenes(Graphics* pGfx) : m_pGfx(pGfx)
+Scenes::Scenes(Core* core) : m_core(core)
 {}
 
 Scene* Scenes::CreateScene(std::wstring szLevelName)
 {
-	Scene* pNewScene = new Scene(m_pGfx);
+	Scene* pNewScene = new Scene(m_core);
 	m_sceneList[szLevelName] = pNewScene;
 	return pNewScene;
 }

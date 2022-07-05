@@ -1,10 +1,10 @@
 #pragma once
-#include "Graphics.h"
+#include "Core.h"
 #include <string>
 #include "entt/entt.hpp"
 
+class Core;
 class GameObject;
-class Graphics;
 
 struct TagComponent
 {
@@ -20,7 +20,7 @@ class Scene
 {
 	friend class GameObject;
 public:
-	Scene(Graphics* gfx);
+	Scene(Core* core);
 	~Scene() = default;
 
 	GameObject CreateEntity(std::wstring tag);
@@ -30,7 +30,7 @@ private:
 	void DrawObject();
 
 	entt::registry registry;
-	Graphics* m_pGfx;
+	Core* m_core;
 };
 
 class GameObject

@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "Mesh.h"
 
-Scene::Scene(Graphics* gfx) : m_pGfx(gfx)
+Scene::Scene(Core* core) : m_core(core)
 {}
 
 GameObject Scene::CreateEntity(std::wstring tag)

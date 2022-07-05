@@ -7,7 +7,7 @@
 Core::Core()
 {
 	graphics = std::make_unique<Graphics>(this);
-	m_scenes = std::make_unique<Scenes>(graphics.get());
+	m_scenes = std::make_unique<Scenes>(this);
 }
 
 void Core::LaunchAsync()
@@ -38,6 +38,11 @@ Window& Core::window()
 Core::Input Core::input()
 {
 	return { keyboard, mouse };
+}
+
+ResourceManager& Core::resources()
+{
+	return m_resourceManager;
 }
 
 void Core::MainThreadProxy(Core* This)

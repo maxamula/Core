@@ -17,10 +17,6 @@ struct Mesh
 	size_t indices;
 };
 
-// Mesh loader
-Mesh GetMesh(std::wstring szPath);
-bool TryLoadMesh(std::wstring szPath);
-
 // Game object component
 struct MeshRenderer
 {
