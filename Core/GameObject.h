@@ -24,8 +24,11 @@ public:
 	Scene(Core* core);
 	~Scene() = default;
 
-	GameObject CreateEntity(std::wstring tag);
+	GameObject CreateObject(std::wstring tag);
 	Camera& GetCamera();
+	GameObject Object(std::wstring tag);
+	void DestroyObject(std::wstring tag);
+	void DestroyObject(GameObject object);
 	void Start();
 	void Update(float fDeltaTime);
 private:
@@ -41,6 +44,7 @@ private:
 
 class GameObject
 {
+	friend class Scene;
 public:
 	GameObject();
 	GameObject(entt::entity entity, Scene* pScene);

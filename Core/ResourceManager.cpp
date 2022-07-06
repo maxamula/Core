@@ -1,6 +1,16 @@
 #include "ResourceManager.h"
+#include "Primitives.h"
 #include <d3dcompiler.h>
 
+ResourceManager::ResourceManager()
+{
+	Primitives::InitializePrimitivesModels();
+}
+
+ResourceManager::~ResourceManager()
+{
+	Primitives::ReleasePrimitivesModels();
+}
 
 ID3DBlob* ResourceManager::GetShader(std::wstring szRcPath)
 {

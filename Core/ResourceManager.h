@@ -7,8 +7,8 @@
 class ResourceManager
 {
 public:
-	ResourceManager() = default;
-	~ResourceManager() = default;
+	ResourceManager();
+	~ResourceManager();
 
 	ID3DBlob* GetShader(std::wstring szRcPath);
 	void ReleaseShader(std::wstring szRcPath);

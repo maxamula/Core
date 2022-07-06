@@ -20,7 +20,6 @@ struct Mesh
 // Game object component
 struct MeshRenderer
 {
-	std::wstring szMeshPath;
 	Vector3 offset;
 	Vector3 rotation;
 	Vector3 scaling;
