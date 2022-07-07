@@ -1,0 +1,5 @@
+﻿  Core.cpp
+C:\Users\nullptr\Desktop\Core\Core\Core.cpp(5,1): fatal error C1010: непредвиденный конец файла во время поиска предкомпилированного заголовка. Возможно, вы забыли добавить директиву "#include "pch.h"" в источник.
+  Window.cpp
+C:\Users\nullptr\Desktop\Core\Core\Window.cpp(1,10): fatal error C1083: Не удается открыть файл предкомпилированный заголовок: Debug\Core.pch: No such file or directory,
+  Создание кода...

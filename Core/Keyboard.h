@@ -69,4 +69,3 @@ private:
 	std::queue<Event> keybuffer;
 	std::queue<char> charbuffer;
 };
-

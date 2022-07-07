@@ -1,92 +1,123 @@
-﻿#pragma comment(lib, "d3d11.lib")
+﻿#include "Core.h"
+#include "Window.h"
+#include "Graphics.h"
+#include "Keyboard.h"
+#include "Mouse.h"
+#include "Debug.h"
+
+//imgui
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx11.h>
+
+// Libraries
+#pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
-#include "Core.h"
 
-#define WIN32_LEAN_AND_MEAN
+// Global declarations
+Window window;
+Graphics graphics;
+Keyboard keyboard;
+Mouse mouse;
 
-Core::Core()
+// Imgui stuff
+ImGuiIO imGuiIO;
+
+// Main game loop
+void MainThread()
 {
-	graphics = std::make_unique<Graphics>(this);
-	m_scenes = std::make_unique<Scenes>(this);
-}
-
-void Core::LaunchAsync()
-{
-	CloseHandle(CreateThread(0, 0, (LPTHREAD_START_ROUTINE)Core::WindowThreadProxy, this, 0, 0));
-}
-
-void Core::Launch()
-{
-	WindowThread();
-}
-
-Graphics& Core::gfx()
-{
-	return *graphics.get();
-}
-
-Scenes& Core::scenes()
-{
-	return *m_scenes.get();
-}
-
-Window& Core::window()
-{
-	return *this->graphics->wnd.get();
-}
-
-Core::Input Core::input()
-{
-	return { keyboard, mouse };
-}
-
-ResourceManager& Core::resources()
-{
-	return m_resourceManager;
-}
-
-void Core::MainThreadProxy(Core* This)
-{
-	This->MainThread();
-}
-
-void Core::WindowThreadProxy(Core* This)
-{
-	This->WindowThread();
-}
-
-void Core::MainThread()
-{
-	// Initialize all scenes
-	for (auto [tag, scene] : m_scenes->m_sceneList)
+	while (window.GetWindowState())
 	{
-		scene->Start();
-	}
-	// Main loop
-	while (graphics->wnd->GetWindowState())
-	{
-		graphics->BeginFrame();
-		if (m_scenes->m_pCurrentScene != NULL)
-		{
-			m_scenes->m_pCurrentScene->Update(0.0f);
-		}
-		graphics->EndFrame();
+		graphics.BeginFrame();
+
+		
+		// draw imgui overlay
+		DrawDebugWindow();
+		graphics.EndFrame();
 	}
 }
 
-void Core::WindowThread()
+void Engine::InitializeEngine()
 {
-	if (graphics->wnd->GetWindowState())
-		ShowWindow(graphics->wnd->WinId(), SW_SHOWNORMAL);
-	else
-		ShowWindow(graphics->wnd->MakeWindow(), SW_SHOWNORMAL);
-	// After creating window launch main thread
-	CloseHandle(CreateThread(0, 0, (LPTHREAD_START_ROUTINE)MainThreadProxy, this, 0, 0));
+	// imgui initialization
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	imGuiIO = ImGui::GetIO();
+	ImGui::StyleColorsDark();
+	// Create window instance and show
+	window.MakeWindow();
+	ShowWindow(window.hWnd, SW_SHOWNORMAL);
+	// Launch main game loop in separate thread
+	CloseHandle(CreateThread(0, 0, (LPTHREAD_START_ROUTINE)MainThread, 0, 0, 0));
 	// Message loop
 	MSG msg;
-	while (GetMessage(&msg, graphics->wnd->m_hWnd, 0, 0) && graphics->wnd->GetWindowState())
+	while (GetMessage(&msg, window.hWnd, 0, 0))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
 }
+
+// Window stuff
+
+void Engine::SetWindowSize(unsigned short width, unsigned short height)
+{
+	// Set window size
+	window.width = width;
+	window.height = height;
+	if (window.hWnd != NULL)
+	{
+		RECT oldPos;
+		GetWindowRect(window.hWnd, &oldPos);
+		oldPos.right = oldPos.left + width;
+		oldPos.bottom = oldPos.top + height;
+		AdjustWindowRectEx(&oldPos, WS_OVERLAPPEDWINDOW, 0, 0);
+		if (SetWindowPos(window.hWnd, HWND_TOP, oldPos.left, oldPos.top, oldPos.right - oldPos.left, oldPos.bottom - oldPos.top, 0) == NULL)
+			SetWindowPos(window.hWnd, HWND_TOP, oldPos.left, oldPos.top, oldPos.right - oldPos.left, oldPos.bottom - oldPos.top, SWP_ASYNCWINDOWPOS);
+		// Resize resolution
+		graphics.CreateInterfaces(window.hWnd);
+	}
+	// Set imgui coords
+	imGuiIO.DisplaySize = {(float)width, (float)height};
+}
+
+unsigned short Engine::GetWindowWidth()
+{
+	return window.width;
+}
+
+unsigned short Engine::GetWindowHeight()
+{
+	return window.height;
+}
+
+void Engine::SetWindowCaption(std::wstring szCaption)
+{
+	SetWindowText(window.hWnd, szCaption.c_str());
+	window.caption = szCaption;
+}
+
+std::wstring Engine::GetWindowCaption()
+{
+	return window.caption;
+}
+
+// Input
+Keyboard& Engine::GetKeyboard()
+{
+	return keyboard;
+}
+
+Mouse& Engine::GetMouse()
+{
+	return mouse;
+}
+
+// Debug Windows
+
+void Engine::ShowDebugWindow(DBG_WINDOW windowType)
+{
+	dbgWindow = windowType;
+}
+
+//

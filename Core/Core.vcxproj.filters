@@ -13,119 +13,99 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Исходные файлы\Graphics">
-      <UniqueIdentifier>{07bf856e-2bde-4188-a31e-ebb75fdbcf9b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Input">
-      <UniqueIdentifier>{230c1e48-c7c4-420c-907b-16a628c62182}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Исходные файлы\Graphics\Primitives">
-      <UniqueIdentifier>{e55991f4-9297-412a-b94c-5d39215a401e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Шейдеры">
-      <UniqueIdentifier>{e94869d8-91f8-48a4-ab5d-d037bd6273ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Файлы заголовков\ECS">
-      <UniqueIdentifier>{519c5245-64f7-4c65-adae-06574d2e82c4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Файлы заголовков\Graphics">
-      <UniqueIdentifier>{a61c7877-08c4-464e-af11-eadffb8809be}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Файлы заголовков\Input">
-      <UniqueIdentifier>{d61dc41f-446b-4aa8-8c14-357c26cd838a}</UniqueIdentifier>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{7d48415f-2d42-4552-b384-2f3c9af0bf0c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics.cpp">
-      <Filter>Исходные файлы\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Window.cpp">
-      <Filter>Исходные файлы\Graphics</Filter>
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="Keyboard.cpp">
-      <Filter>Исходные файлы\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="Vector.cpp">
-      <Filter>Исходные файлы\Graphics\Primitives</Filter>
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="Mouse.cpp">
-      <Filter>Исходные файлы\Input</Filter>
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Исходные файлы\Graphics</Filter>
+    <ClCompile Include="Graphics.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>Исходные файлы\Graphics</Filter>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Scenes.cpp">
-      <Filter>Исходные файлы\Graphics</Filter>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Primitives.cpp">
-      <Filter>Исходные файлы\Graphics\Primitives</Filter>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceManager.cpp">
-      <Filter>Исходные файлы</Filter>
+    <ClCompile Include="imgui\imgui_impl_dx11.cpp">
+      <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Script.cpp">
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Debug.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Window.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
     <ClInclude Include="Core.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="entt\entt.hpp">
-      <Filter>Файлы заголовков\ECS</Filter>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Primitives.h">
-      <Filter>Файлы заголовков\Graphics</Filter>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Файлы заголовков\Graphics</Filter>
+    <ClInclude Include="imgui\imgui_impl_dx11.h">
+      <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics.h">
-      <Filter>Файлы заголовков\Graphics</Filter>
+    <ClInclude Include="imgui\imgui_impl_win32.h">
+      <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Файлы заголовков\Graphics</Filter>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Scenes.h">
-      <Filter>Файлы заголовков\Graphics</Filter>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Mouse.h">
-      <Filter>Файлы заголовков\Input</Filter>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Keyboard.h">
-      <Filter>Файлы заголовков\Input</Filter>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>Файлы заголовков\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.h">
-      <Filter>Файлы заголовков\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourceManager.h">
+    <ClInclude Include="Debug.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Script.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
-      <Filter>Шейдеры</Filter>
-    </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
-      <Filter>Шейдеры</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>

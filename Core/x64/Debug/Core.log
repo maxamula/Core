@@ -1,4 +1,5 @@
-﻿  Primitives.cpp
-  ResourceManager.cpp
+﻿  Core.cpp
+  Graphics.cpp
+  Window.cpp
   Создание кода...
-  Core.vcxproj -> C:\Users\nullptr\Documents\GitHub\Core\x64\Debug\Core.lib
+  Core.vcxproj -> C:\Users\nullptr\Desktop\Core\x64\Debug\Core.lib

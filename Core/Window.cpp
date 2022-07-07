@@ -1,10 +1,22 @@
 #include "Window.h"
+#include "Keyboard.h"
+#include "Mouse.h"
+#include "Graphics.h"
+// imgui
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx11.h>
+
+extern Keyboard keyboard;
+extern Mouse mouse;
+extern Graphics graphics;
+extern ImGuiIO imGuiIO;
 
 HINSTANCE Window::m_hInst = NULL;
 const WCHAR Window::szClassName[11] = L"GameWindow";
 bool Window::m_bInit = false;
 
-Window::Window(Core* core) : m_keyboard(core->input().keyboard), m_mouse(core->input().mouse), m_core(core)
+Window::Window()
 {
 	if (!m_bInit)
 	{
@@ -28,45 +40,9 @@ Window::Window(Core* core) : m_keyboard(core->input().keyboard), m_mouse(core->i
 	}
 }
 
-HWND Window::WinId() const
-{
-	return m_hWnd;
-}
-
-void Window::SetCaption(WCHAR* szCaption)
-{
-	UINT nChars = wcslen(szCaption);
-	nChars > 60 ? memcpy(m_caption, szCaption, 60u*sizeof(WCHAR)) : memcpy(m_caption, szCaption, nChars*sizeof(WCHAR));
-	if (m_hWnd != NULL)
-		SetWindowText(m_hWnd, m_caption);
-}
-
-void Window::SetWindowSize(USHORT width, USHORT height)
-{
-	m_width = width;
-	m_height = height;
-	if (m_hWnd != NULL)
-	{
-		RECT oldPos;
-		GetWindowRect(m_hWnd, &oldPos);
-		if (SetWindowPos(m_hWnd, HWND_TOP, oldPos.left, oldPos.top, width, height + 36, 0) == NULL)
-			SetWindowPos(m_hWnd, HWND_TOP, oldPos.left, oldPos.top, width, height + 36, SWP_ASYNCWINDOWPOS);
-	}
-}
-
-USHORT Window::GetWidth() const
-{
-	return m_width;
-}
-
-USHORT Window::GetHeight() const
-{
-	return m_height;
-}
-
 bool Window::GetWindowState() const
 {
-	if (m_hWnd == NULL)
+	if (hWnd == NULL)
 		return false;
 	else
 		return true;
@@ -91,8 +67,12 @@ LRESULT WINAPI Window::HandleMsgProxy(HWND hWnd, UINT msg, WPARAM wParam, LPARAM
 	return pWnd->HandleMsg(hWnd, msg, wParam, lParam);
 }
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+		return true;
+
 	switch (msg)
 	{
 	case WM_CLOSE:
@@ -100,50 +80,50 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		return 0;
 	case WM_KILLFOCUS:
-		m_keyboard.ClearState();
+		keyboard.ClearState();
 		break;
 	case WM_KEYDOWN:
-		if (!(lParam & 0x40000000) || m_keyboard.Autorepeat())
+		if (!(lParam & 0x40000000) || keyboard.Autorepeat())
 		{
-			m_keyboard.OnKeyPressed(static_cast<unsigned char>(wParam));
+			keyboard.OnKeyPressed(static_cast<unsigned char>(wParam));
 		}
 	case WM_SYSKEYDOWN:
-		if (!(lParam & 0x40000000) || m_keyboard.Autorepeat())
+		if (!(lParam & 0x40000000) || keyboard.Autorepeat())
 		{
-			m_keyboard.OnKeyPressed(static_cast<unsigned char>(wParam));
+			keyboard.OnKeyPressed(static_cast<unsigned char>(wParam));
 		}
 		break;
 	case WM_KEYUP:
-		m_keyboard.OnKeyReleased(static_cast<unsigned char>(wParam));
+		keyboard.OnKeyReleased(static_cast<unsigned char>(wParam));
 		break;
 	case WM_SYSKEYUP:
-		m_keyboard.OnKeyReleased(static_cast<unsigned char>(wParam));
+		keyboard.OnKeyReleased(static_cast<unsigned char>(wParam));
 		break;
 	case WM_CHAR:
-		m_keyboard.OnChar(static_cast<unsigned char>(wParam));
+		keyboard.OnChar(static_cast<unsigned char>(wParam));
 		break;
 	case WM_MOUSEMOVE:
 	{
 		const POINTS pt = MAKEPOINTS(lParam);
-		if (pt.x >= 0 && pt.x < m_width && pt.y >= 0 && pt.y < m_height)
+		if (pt.x >= 0 && pt.x < width && pt.y >= 0 && pt.y < height)
 		{
-			m_mouse.OnMouseMove(pt.x, pt.y);
-			if (!m_mouse.IsInWindow())
+			mouse.OnMouseMove(pt.x, pt.y);
+			if (!mouse.IsInWindow())
 			{
 				SetCapture(hWnd);
-				m_mouse.OnMouseEnter();
+				mouse.OnMouseEnter();
 			}
 		}
 		else
 		{
 			if (wParam & (MK_LBUTTON | MK_RBUTTON))
 			{
-				m_mouse.OnMouseMove(pt.x, pt.y);
+				mouse.OnMouseMove(pt.x, pt.y);
 			}
 			else
 			{
 				ReleaseCapture();
-				m_mouse.OnMouseLeave();
+				mouse.OnMouseLeave();
 			}
 		}
 		break;
@@ -151,35 +131,35 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:
 	{
 		const POINTS pt = MAKEPOINTS(lParam);
-		m_mouse.OnLeftPressed(pt.x, pt.y);
+		mouse.OnLeftPressed(pt.x, pt.y);
 		SetForegroundWindow(hWnd);
 		break;
 	}
 	case WM_RBUTTONDOWN:
 	{
 		const POINTS pt = MAKEPOINTS(lParam);
-		m_mouse.OnRightPressed(pt.x, pt.y);
+		mouse.OnRightPressed(pt.x, pt.y);
 		break;
 	}
 	case WM_LBUTTONUP:
 	{
 		const POINTS pt = MAKEPOINTS(lParam);
-		m_mouse.OnLeftReleased(pt.x, pt.y);
-		if (pt.x < 0 || pt.x >= m_width || pt.y < 0 || pt.y >= m_height)
+		mouse.OnLeftReleased(pt.x, pt.y);
+		if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height)
 		{
 			ReleaseCapture();
-			m_mouse.OnMouseLeave();
+			mouse.OnMouseLeave();
 		}
 		break;
 	}
 	case WM_RBUTTONUP:
 	{
 		const POINTS pt = MAKEPOINTS(lParam);
-		m_mouse.OnRightReleased(pt.x, pt.y);
-		if (pt.x < 0 || pt.x >= m_width || pt.y < 0 || pt.y >= m_height)
+		mouse.OnRightReleased(pt.x, pt.y);
+		if (pt.x < 0 || pt.x >= width || pt.y < 0 || pt.y >= height)
 		{
 			ReleaseCapture();
-			m_mouse.OnMouseLeave();
+			mouse.OnMouseLeave();
 		}
 		break;
 	}
@@ -187,7 +167,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		const POINTS pt = MAKEPOINTS(lParam);
 		const int delta = GET_WHEEL_DELTA_WPARAM(wParam);
-		m_mouse.OnWheelDelta(pt.x, pt.y, delta);
+		mouse.OnWheelDelta(pt.x, pt.y, delta);
 		break;
 	}
 	}
@@ -197,32 +177,23 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 HWND Window::MakeWindow()
 {
-	if (m_hWnd != NULL)
-		::DestroyWindow(m_hWnd);
-	m_hWnd = CreateWindow(szClassName, m_caption, WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPED, CW_USEDEFAULT, CW_USEDEFAULT, m_width, m_height, NULL, NULL, m_hInst, this);
-	m_core->gfx().CreateInterfaces(m_hWnd);
-	return m_hWnd;
+	if (hWnd != NULL)
+		::DestroyWindow(hWnd);
+	RECT rect = {0, 0, width, height}; // will contain agjusted window rect
+	AdjustWindowRectEx(&rect, WS_OVERLAPPEDWINDOW, 0, 0);	// resize window considering borders
+	hWnd = CreateWindow(szClassName, caption.c_str(), WS_MINIMIZEBOX | WS_SYSMENU | WS_OVERLAPPED, CW_USEDEFAULT, CW_USEDEFAULT, rect.right - rect.left, rect.bottom - rect.top, NULL, NULL, m_hInst, this);
+	// create d3d device etc
+	graphics.CreateInterfaces(hWnd, {width, height});
+	// initialize imgui
+	ImGui_ImplDX11_Init(graphics.pDev.Get(), graphics.pContext.Get());
+	ImGui_ImplWin32_Init(hWnd);
+	// Set imgui coords
+	imGuiIO.DisplaySize = { (float)width, (float)height };
+	return hWnd;
 }
 
 void Window::DestroyWindow()
 {
-	::DestroyWindow(m_hWnd);
-	m_hWnd = NULL;
-}
-
-std::optional<int> Window::ProcessMessages()
-{
-	MSG msg;
-	while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-	{
-		if (msg.message == WM_QUIT)
-		{
-			return (int)msg.wParam;
-		}
-
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-	return {};
+	::DestroyWindow(hWnd);
+	hWnd = NULL;
 }

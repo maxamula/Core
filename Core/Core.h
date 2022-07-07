@@ -1,47 +1,31 @@
 #pragma once
-#include "Graphics.h"
-#include "Scenes.h"
 #include "Keyboard.h"
 #include "Mouse.h"
-#include "ResourceManager.h"
-#include <memory>
+#include <string>
 
-class Graphics;
-class Window;
-class Scenes;
-
-class Core
+// Enums
+enum class DBG_WINDOW	// enum of debug windows
 {
-public:
-	struct Input
-	{
-		Keyboard& keyboard;
-		Mouse& mouse;
-	};
-public:
-	Core();
-	void LaunchAsync();
-	void Launch();
-	Graphics& gfx();
-	Scenes& scenes();
-	Window& window();
-	Input input();
-	ResourceManager& resources();
-	
-	
-protected:
-	// Graphics
-	std::unique_ptr<Graphics> graphics;
-	std::unique_ptr<Scenes> m_scenes;
-	// Input
-	Keyboard keyboard;
-	Mouse mouse;
-	// Resource manager
-	ResourceManager m_resourceManager;
-private:
-	static void MainThreadProxy(Core* This);
-	static void WindowThreadProxy(Core* This);
-	void MainThread();
-	void WindowThread();
+	DBG_WINDOW_NONE,
+	DBG_WINDOW_TEST
 };
- 
+
+namespace Engine
+{
+	void InitializeEngine();
+	// Window stuff
+	void SetWindowSize(unsigned short width, unsigned short height);
+	unsigned short GetWindowWidth();
+	unsigned short GetWindowHeight();
+	void SetWindowCaption(std::wstring szCaption);
+	std::wstring GetWindowCaption();
+	// Input
+	Keyboard& GetKeyboard();
+	Mouse& GetMouse();
+	// Debug windows
+	void ShowDebugWindow(DBG_WINDOW windowType);
+
+}
+
+
+
