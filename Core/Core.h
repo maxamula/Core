@@ -1,13 +1,16 @@
 #pragma once
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "CommonComponents.h"
+#include "GameObject.h"
 #include <string>
 
 // Enums
 enum class DBG_WINDOW	// enum of debug windows
 {
 	DBG_WINDOW_NONE,
-	DBG_WINDOW_TEST
+	DBG_WINDOW_TEST,
+	DBG_WINDOW_SCENE
 };
 
 namespace Engine
@@ -24,6 +27,11 @@ namespace Engine
 	Mouse& GetMouse();
 	// Debug windows
 	void ShowDebugWindow(DBG_WINDOW windowType);
+	//	Scenes&Levels
+	Scene* CreateScene(std::string tag);
+	Scene* GetScene(std::string tag);
+	void DestroyScene(std::string tag);
+	void SetActiveScene(std::string tag);
 
 }
 

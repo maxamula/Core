@@ -4,11 +4,15 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Debug.h"
+#include "GameObject.h"
 
 //imgui
 #include <imgui.h>
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
+
+// other
+#include <list>
 
 // Libraries
 #pragma comment(lib, "d3d11.lib")
@@ -20,6 +24,11 @@ Graphics graphics;
 Keyboard keyboard;
 Mouse mouse;
 
+// Collection of all game scenes
+std::list<Scene*> scenes;
+// Pointer to active scene
+Scene* pActiveScene;
+
 // Imgui stuff
 ImGuiIO imGuiIO;
 
@@ -29,10 +38,13 @@ void MainThread()
 	while (window.GetWindowState())
 	{
 		graphics.BeginFrame();
+		if (pActiveScene != NULL)
+		{
 
-		
-		// draw imgui overlay
-		DrawDebugWindow();
+
+			// draw imgui overlay
+			DrawDebugWindow();
+		}
 		graphics.EndFrame();
 	}
 }
@@ -120,4 +132,50 @@ void Engine::ShowDebugWindow(DBG_WINDOW windowType)
 	dbgWindow = windowType;
 }
 
-//
+// Scenes control
+
+Scene* Engine::CreateScene(std::string tag)
+{
+	for (auto scene : scenes)
+	{
+		if (scene->GetTag() == tag)
+			return NULL;
+	}
+	Scene* newScene = new Scene(tag);
+	scenes.push_back(newScene);
+	return newScene;
+}
+
+Scene* Engine::GetScene(std::string tag)
+{
+	for (auto scene : scenes)
+	{
+		if (scene->GetTag() == tag)
+			return scene;
+	}
+}
+
+void Engine::DestroyScene(std::string tag)
+{
+	for (auto scene : scenes)
+	{
+		if (scene->GetTag() == tag)
+		{
+			scenes.remove(scene);
+			delete scene;
+			if (pActiveScene == scene)
+				pActiveScene = NULL;
+		}
+	}
+}
+
+void Engine::SetActiveScene(std::string tag)
+{
+	for (auto scene : scenes)
+	{
+		if (scene->GetTag() == tag)
+		{
+			pActiveScene = scene;
+		}
+	}
+}

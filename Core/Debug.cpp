@@ -1,4 +1,5 @@
 #include "Debug.h"
+#include "GameObject.h"	// Scene
 // imgui
 #include <imgui.h>
 #include <imgui_impl_win32.h>
@@ -6,6 +7,11 @@
 
 // Global declarations
 DBG_WINDOW dbgWindow = DBG_WINDOW::DBG_WINDOW_NONE;
+
+extern Scene* pActiveScene;
+
+// func decl
+void SceneDbgWindow();
 
 void DrawDebugWindow()
 {
@@ -22,9 +28,22 @@ void DrawDebugWindow()
 		case DBG_WINDOW::DBG_WINDOW_TEST:
 			ImGui::ShowDemoWindow();
 			break;
+		case DBG_WINDOW::DBG_WINDOW_SCENE:
+			SceneDbgWindow();
+			break;
 		}
 
 		ImGui::Render();
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	}	
+}
+
+// Scene
+
+void SceneDbgWindow()
+{
+	if (pActiveScene == NULL)
+		return;
+	ImGui::Begin("Active Scene");
+	ImGui::End();
 }

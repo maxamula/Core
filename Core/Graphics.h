@@ -33,7 +33,6 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarg;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSV;
 
-	Resolution resolution = { 1280, 720 };
 	Color voidColor = { 0.0f, 0.0f, 0.0f };
 private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pTransformBuffer;
