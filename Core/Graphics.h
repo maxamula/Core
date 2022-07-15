@@ -1,4 +1,5 @@
 #pragma once
+#include "GameObject.h"
 #include <wrl/client.h>
 #include <d3d11.h>
 #include <DirectXMath.h>
@@ -22,7 +23,11 @@ public:
 	};
 
 public:
+	// Create d3d interfaces
 	void CreateInterfaces(HWND hWnd, Resolution resolution = {1280, 720});
+	// Main Drawing method
+	void DrawScene(Scene* pScene);
+	// update viewmatrix
 	void UpdateMatrix(const TransCBuf& cbuf);
 	void BeginFrame();
 	void EndFrame();
@@ -35,5 +40,7 @@ public:
 
 	Color voidColor = { 0.0f, 0.0f, 0.0f };
 private:
+
+
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pTransformBuffer;
 };

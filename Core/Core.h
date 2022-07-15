@@ -3,6 +3,9 @@
 #include "Mouse.h"
 #include "CommonComponents.h"
 #include "GameObject.h"
+#include "Material.h"
+#include "Mesh.h"
+#include "Primitives.h"
 #include <string>
 
 // Enums
@@ -15,7 +18,9 @@ enum class DBG_WINDOW	// enum of debug windows
 
 namespace Engine
 {
+	void InitializeEngineComponents();
 	void InitializeEngine();
+	void ReleaseEngine();
 	// Window stuff
 	void SetWindowSize(unsigned short width, unsigned short height);
 	unsigned short GetWindowWidth();

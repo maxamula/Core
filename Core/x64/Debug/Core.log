@@ -1,7 +1,2 @@
-﻿  Core.cpp
-  Debug.cpp
-  GameObject.cpp
-  Scene.cpp
-  Создание кода...
-C:\Users\nullptr\Desktop\Core\Core\Core.cpp(156): warning C4715: Engine::GetScene: значение возвращается не при всех путях выполнения
+﻿  Graphics.cpp
   Core.vcxproj -> C:\Users\nullptr\Desktop\Core\x64\Debug\Core.lib

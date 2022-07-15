@@ -4,7 +4,7 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 #include "Debug.h"
-#include "GameObject.h"
+#include "ResourceManager.h"
 
 //imgui
 #include <imgui.h>
@@ -24,6 +24,9 @@ Graphics graphics;
 Keyboard keyboard;
 Mouse mouse;
 
+// Resource management
+ResourceManager resources;
+
 // Collection of all game scenes
 std::list<Scene*> scenes;
 // Pointer to active scene
@@ -40,22 +43,33 @@ void MainThread()
 		graphics.BeginFrame();
 		if (pActiveScene != NULL)
 		{
-
+			// Draw objects
+			graphics.DrawScene(pActiveScene);
 
 			// draw imgui overlay
-			DrawDebugWindow();
+			DrawDebugWindow(); 
 		}
 		graphics.EndFrame();
 	}
 }
 
-void Engine::InitializeEngine()
+void Engine::InitializeEngineComponents()
 {
 	// imgui initialization
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	imGuiIO = ImGui::GetIO();
+	imGuiIO.IniFilename = NULL;	// disable ini
 	ImGui::StyleColorsDark();
+	// Load Primnitives
+	Primitives::InitializePrimitivesModels();
+	// Setup default material
+	Material defaultMaterial = Material::AddMaterial("Default");
+	defaultMaterial.Add<Color>().color = { 1.0f, 1.0f, 1.0f };
+}
+
+void Engine::InitializeEngine()
+{	
 	// Create window instance and show
 	window.MakeWindow();
 	ShowWindow(window.hWnd, SW_SHOWNORMAL);
@@ -68,6 +82,16 @@ void Engine::InitializeEngine()
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+}
+
+void Engine::ReleaseEngine()
+{
+	// ImGui shutdown
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
+	// Unload primitives data
+	Primitives::ReleasePrimitivesModels();
 }
 
 // Window stuff

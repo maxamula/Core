@@ -1,4 +1,5 @@
 #include "Debug.h"
+#include "Graphics.h"	// Graphics
 #include "GameObject.h"	// Scene
 // imgui
 #include <imgui.h>
@@ -7,7 +8,9 @@
 
 // Global declarations
 DBG_WINDOW dbgWindow = DBG_WINDOW::DBG_WINDOW_NONE;
+GameObject* pDbgObject = NULL;
 
+extern Graphics graphics;
 extern Scene* pActiveScene;
 
 // func decl
@@ -39,11 +42,10 @@ void DrawDebugWindow()
 }
 
 // Scene
-
 void SceneDbgWindow()
 {
 	if (pActiveScene == NULL)
 		return;
-	ImGui::Begin("Active Scene");
+	ImGui::Begin("Current Scene");
 	ImGui::End();
 }

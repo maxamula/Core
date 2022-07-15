@@ -7,6 +7,8 @@ class GameObject;
 class Scene
 {
 	friend class GameObject;
+	friend void SceneDbgWindow(void);
+	friend class Graphics;
 public:
 	Scene(std::string tag);
 
